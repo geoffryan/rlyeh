@@ -8,6 +8,7 @@ int setup_faces_x1(struct Grid *theGrid, struct Face **theFaces, int *nf);
 int setup_faces_x2(struct Grid *theGrid, struct Face **theFaces, int *nf);
 int setup_faces_x3(struct Grid *theGrid, struct Face **theFaces, int *nf);
 
+int recon_pcm(struct Grid *, struct Face *, struct Face *, struct Face *, int, int, int);
 int recon_plm(struct Grid *, struct Face *, struct Face *, struct Face *, int, int, int);
 
 #endif
