@@ -1,4 +1,13 @@
 # Generic Makefile, courtesy of Brian Farris 2013
+#
+# THERE SHOULD BE NO NEED TO EDIT THIS MAKEFILE.
+#
+# ALL MACHINE SPECIFIC FLAGS/PATHS ARE SET IN Makefile.in
+
+MAKEFILE_IN = $(PWD)/Makefile.in
+MAKEFILE_MACHINE = $(PWD)/Makefile.machine
+include $(MAKEFILE_IN)
+include $(MAKEFILE_machine)
 
 APP      = rlyeh
 
@@ -6,19 +15,26 @@ SRCEXT   = c
 SRCDIR   = src
 OBJDIR   = obj
 BINDIR   = bin
+PARDIR   = parfiles
+VISDIR   = vis
+INSDIR   = $(strip $(INSTALL_DIR))
 
 SRCS    := $(shell find $(SRCDIR) -name '*.$(SRCEXT)')
 SRCDIRS := $(shell find . -name '*.$(SRCEXT)' -exec dirname {} \; | uniq)
 OBJS    := $(patsubst %.$(SRCEXT),$(OBJDIR)/%.o,$(SRCS))
 
+GIT_VERSION = $(shell git describe --dirty --always --tags)
+
+#Vital flags 
 DEBUG    = -g
-INCLUDES = -I$(H55)/include
-CFLAGS   = -O3 -c $(DEBUG) $(INCLUDES)
-LDFLAGS  = -lm
+CFLAGS   += -O3 -Wall -c $(DEBUG) -DVERSION=\"$(GIT_VERSION)\"
+LDFLAGS  += -lm
 
-CC       = mpicc
+#HDF5 Installation - specified in Makefile.in
+#CFLAGS += -I$(H5DIR)/include
+#LDFLAGS += -L$(H5DIR)/lib -lhdf5
 
-.PHONY: all clean distclean
+.PHONY: all clean distclean install
 
 
 all: $(BINDIR)/$(APP)
@@ -40,6 +56,21 @@ distclean: clean
 
 buildrepo:
 	@$(call make-repo)
+
+install: $(BINDIR)/$(APP)
+ifndef INSTALL_DIR
+	$(error INSTALL_DIR has not been set in Makefile.in $(INSDIR))
+endif
+	@echo "Installing into $(INSDIR)..."
+	@echo "    Installing $(BINDIR)/"
+	@mkdir -p $(INSDIR)/$(BINDIR)
+	@cp $(BINDIR)/$(APP) $(INSDIR)/$(BINDIR)/$(APP)
+	@echo "    Installing $(PARDIR)/"
+	@mkdir -p $(INSDIR)/$(PARDIR)
+	@cp -r $(PARDIR)/* $(INSDIR)/$(PARDIR)/
+	@echo "    Installing $(VISDIR)/"
+	@mkdir -p $(INSDIR)/$(VISDIR)
+	@cp -r $(VISDIR)/* $(INSDIR)/$(VISDIR)/
 
 define make-repo
    for dir in $(SRCDIRS); \
