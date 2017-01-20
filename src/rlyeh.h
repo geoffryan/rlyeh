@@ -5,50 +5,38 @@
 #define NUMP 0
 #define NUMQ (NUMC+NUMP)
 
-enum{X1_DIR,X2_DIR,X3_DIR};
+#include "par.h"
 
-struct Cell{
-    double prim[NUMQ];
-    double cons[NUMQ];
-    double RKcons[NUMQ];
+enum{X1,X2,X3};
 
-    double grad1[NUMQ];
-    double grad2[NUMQ];
-    double grad3[NUMQ];
+struct Domain{
+    double ***prim;
+    double ***cons;
+    double ***consRK;
+    double ***grad;
+    double ***x1f;
+    double ***x1fRK;
+    double **x2f;
+    double **x2fRK;
+    double *x3f;
+    double *x3fRK;
+    double ***w1;
+    double **w2;
+    double *w3;
+    int **N1;
+    int *N2;
+    int N3;
 
-    double xiph[3];
-    double dx[3];
-    double dS;
+    int periodic1;
+    int periodic2;
+    int periodic3;
+
+    double t;
+    double cfl;
+    double plm;
+
+    struct ParList *pars;
 };
 
-struct Face{
-    struct Cell *cL;
-    struct Cell *cR;
-    
-    double cm[3];
-    double dA;
-};
-
-struct Parlist{
-    int nx1;
-    int nx2;
-    int nx3;
-};
-
-struct Grid{
-    struct Cell ***theCells;
-    int ng;
-    int *Nx1;
-    int **Nx2;
-    int Nx3;
-    int periodic;
-
-    struct Parlist *thePars;
-
-    double *x1ph;
-    double *x3ph;
-};
-
-int (*synchronize)(struct Grid *);
 
 #endif
