@@ -10,7 +10,7 @@ int recon_pcm(struct Grid *theGrid, struct Face *theFaces1, struct Face *theFace
         for(i=0; i<theGrid->Nx1[k]; i++)
             for(j=0; j<theGrid->Nx2[k][i]; j++)
             {
-                c = &(theGrid->theCells[k][i][j])
+                c = &(theGrid->theCells[k][i][j]);
                 for(q=0; q<NUMQ; q++)
                 {
                     c->grad1[q] = 0.0;

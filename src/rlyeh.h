@@ -7,7 +7,6 @@
 
 enum{X1_DIR,X2_DIR,X3_DIR};
 
-
 struct Cell{
     double prim[NUMQ];
     double cons[NUMQ];
@@ -30,6 +29,12 @@ struct Face{
     double dA;
 };
 
+struct Parlist{
+    int nx1;
+    int nx2;
+    int nx3;
+};
+
 struct Grid{
     struct Cell ***theCells;
     int ng;
@@ -37,6 +42,8 @@ struct Grid{
     int **Nx2;
     int Nx3;
     int periodic;
+
+    struct Parlist *thePars;
 
     double *x1ph;
     double *x3ph;
