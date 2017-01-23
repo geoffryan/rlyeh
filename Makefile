@@ -7,7 +7,7 @@
 MAKEFILE_IN = $(PWD)/Makefile.in
 MAKEFILE_MACHINE = $(PWD)/Makefile.machine
 include $(MAKEFILE_IN)
-include $(MAKEFILE_machine)
+include $(MAKEFILE_MACHINE)
 
 APP      = rlyeh
 
@@ -35,7 +35,6 @@ LDFLAGS  += -lm
 #LDFLAGS += -L$(H5DIR)/lib -lhdf5
 
 .PHONY: all clean distclean install
-
 
 all: $(BINDIR)/$(APP)
 

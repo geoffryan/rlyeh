@@ -45,19 +45,24 @@ double calc_dt(struct Domain *dom)
                                0.0, 0.0, 1.0};
                 double v[6];
                 maxv(&(dom->prim[k][j][NUMQ*i]), v, x, a, b, g, dom->t);
-                double dv[3][2];
-                dv[0][0] = fabs(v[0] - w1);
-                dv[0][1] = fabs(v[1] - w1);
-                dv[1][0] = fabs(v[2] - w2);
-                dv[1][1] = fabs(v[3] - w2);
-                dv[2][0] = fabs(v[4] - w3);
-                dv[2][1] = fabs(v[5] - w3);
+                v[0] = fabs(v[0] - w1);
+                v[1] = fabs(v[1] - w1);
+                v[2] = fabs(v[2] - w2);
+                v[3] = fabs(v[3] - w2);
+                v[4] = fabs(v[4] - w3);
+                v[5] = fabs(v[5] - w3);
 
                 double idt1, idt2, idt3;
 
-                idt1 = dv[0][0] > dv[0][1] ? dv[0][0]/dx1 : dv[0][1]/dx1;
-                idt2 = dv[1][0] > dv[1][1] ? dv[1][0]/dx2 : dv[1][1]/dx2;
-                idt3 = dv[2][0] > dv[2][1] ? dv[2][0]/dx3 : dv[2][1]/dx3;
+                idt1 = v[0] > v[1] ? v[0]/dx1 : v[1]/dx1;
+                if(dom->N2[k] > 1)
+                    idt2 = v[2] > v[3] ? v[2]/dx2 : v[3]/dx2;
+                else
+                    idt2 = 0.0;
+                if(dom->N3 > 1)
+                    idt3 = v[4] > v[5] ? v[4]/dx3 : v[5]/dx3;
+                else
+                    idt3 = 0.0;
                 
                 double dt = 1.0 / (idt1 + idt2 + idt3);
                 if (dt < dtmin)
@@ -66,6 +71,6 @@ double calc_dt(struct Domain *dom)
         }
     }
 
-    return dtmin;
+    return dom->cfl * dtmin;
 }
 
